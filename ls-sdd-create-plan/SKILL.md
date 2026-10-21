@@ -1,11 +1,11 @@
 ---
 name: ls-sdd-create-plan
-description: Create a technical implementation plan from one or more clarified specifications. Use when specs are in status 'clarified' (or 'planned' for revision) and the user wants to decide how to build — architecture, modules, dependencies, risks. Produces plan.md and advances specs to 'planned'.
+description: Create a technical implementation plan from one or more clarified specifications (or a draft spec when scale is trivial). Use when specs are in status 'clarified' or 'draft' (trivial scale), and the user wants to decide how to build — architecture, modules, dependencies, risks. Produces plan.md and advances specs to 'planned'.
 ---
 
 # ls-sdd-create-plan — Create an Implementation Plan
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -28,9 +28,9 @@ use it to define requirements — that is `ls-sdd-specify`.
 ## Procedure
 
 1. **Identify the input specs.** If the user did not name them:
-   - Scan `specs/` for specs in `clarified` status.
+   - Scan `specs/` for specs in `clarified` status (or `draft` status if `scale: trivial`).
    - If exactly one, use it. If multiple, ask the user which to plan together.
-   - If none, recommend `ls-sdd-clarify` first.
+   - If none, recommend `ls-sdd-clarify` first (or `ls-sdd-specify` if no specs exist).
 
 2. **Read each spec** (`specs/NNNN-spec-<slug>/spec.md`) and its
    `clarifications.md` if present. Read the constitution (`AGENTS.md`) for
@@ -51,7 +51,7 @@ use it to define requirements — that is `ls-sdd-specify`.
    - **Open questions**: items that need research or a decision before tasks can be written.
    - **Research notes** (optional): if tech-stack research was done, summarize here or write `research.md` in the plan directory.
 
-5. **Read the template** at `~/.agents/skills/ls-sdd/templates/plan.template.md`. Substitute:
+5. **Read the template** at `ls-sdd/templates/plan.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute:
    - `{{NNNN}}` → plan ID
    - `{{identity}}` → slug
    - `{{YYYY-MM-DDTHH:MM}}` → current timestamp
@@ -73,6 +73,18 @@ use it to define requirements — that is `ls-sdd-specify`.
 9. **Confirm to the user**: print the plan path, ID, slug, and referenced
    specs. Recommend the next step: `ls-sdd-tasklist`.
 
+## Trivial Scale
+
+When the input spec has `scale: trivial`, produce a **minimal plan** rather than a full architecture document:
+
+- **Goal**: one paragraph describing what will be done.
+- **Modules / Components**: a brief table or bullet list (one or two rows) — enough for `ls-sdd-tasklist` to generate tasks from.
+- **Omit**: Architecture diagrams, Risk & Trade-offs, Open questions, Research notes (unless the user explicitly wants them).
+
+The plan file **must still be created** (with `status: planned`) so that `ls-sdd-tasklist` can locate it in `plans/`. Do not skip this step for trivial scale — the minimal plan is what makes the rest of the pipeline work.
+
+After writing the plan, recommend `ls-sdd-tasklist` directly.
+
 ## Revision Flow
 
 If a plan already exists for these specs and the user wants to revise:
@@ -83,10 +95,7 @@ If a plan already exists for these specs and the user wants to revise:
 
 ## Language
 
-Write the plan in the **project's artifact language** — read it from the
-`Artifact Language` section of `AGENTS.md`. Match the language of the specs
-it references. The conversation language does not determine the artifact
-language.
+→ See `ls-sdd` § Language. Write all artifacts in the project's artifact language (from `AGENTS.md`).
 
 ## What Not to Do
 

@@ -5,7 +5,7 @@ description: Execute tasks from a task list in dependency order. Use when the pl
 
 # ls-sdd-implement — Execute Tasks
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -29,15 +29,17 @@ Do **not** use this skill to add new tasks — that is `ls-sdd-tasklist` or
    - If exactly one, use it. If multiple, ask the user which one.
    - If none in those statuses, recommend `ls-sdd-analyze` first.
 
-2. **Read the task list** (`plans/NNNN-<slug>/tasks.md`) and the plan
-   (`plans/NNNN-<slug>/plan.md`). Read the referenced specs and the
-   constitution (`AGENTS.md`) for context.
+2. **Read selectively to conserve context**:
+   - Always read: `plans/NNNN-<slug>/tasks.md` (progress state) and `plans/NNNN-<slug>/plan.md` (module design).
+   - Read `AGENTS.md` for quality bar and test strategy (usually short).
+   - Read referenced spec sections **on demand**: only the requirement(s) relevant to the current task. Do not load all specs upfront — look up the relevant section when a task references it.
+   - Read source files only when listed in the current task's `files:`.
 
 3. **Set the plan status** to `implementing` if it is not already.
 
 4. **Pick the next task(s) to work on**:
    - A task is **ready** if it is `- [ ]` (open) and all tasks in its `depends:` are `- [x]` (done).
-   - Tasks marked `[P]` (parallelizable) can be picked together if the agent supports parallel work; otherwise pick them in order.
+   - Tasks marked `[P]` (parallelizable) are safe to run concurrently once their `depends:` are satisfied. Current single-agent environments: pick them in order. *(Multi-agent parallelism is a future capability.)*
    - If a task is `- [~]` (blocked), do not pick it — surface the blocker to the user.
 
 5. **For each picked task**:
@@ -72,10 +74,7 @@ If a task cannot proceed:
 
 ## Language
 
-Communicate with the user in their language. Code, commit messages, and
-artifacts follow the **project's artifact language** — read it from the
-`Artifact Language` section of `AGENTS.md`. The conversation language does
-not determine the artifact language.
+Communicate with the user in their language. For artifacts and code, see `ls-sdd` § Language.
 
 ## What Not to Do
 

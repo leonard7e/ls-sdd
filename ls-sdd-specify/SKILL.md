@@ -5,7 +5,7 @@ description: Create a functional specification describing what to build and why,
 
 # ls-sdd-specify — Create a Specification
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -25,7 +25,7 @@ Do **not** use this skill to write the plan (architecture, modules) — that is
 ## Procedure
 
 1. **Determine the scale.** Ask the user (once, briefly):
-   - **trivial** — bugfix or small tweak. Minimal spec, skip the plan later, go straight to tasks.
+   - **trivial** — bugfix or small tweak. Minimal spec → minimal plan → tasks.
    - **standard** — feature or new module. Full spec → plan → tasks.
    - **enterprise** — system spanning multiple modules/teams. Spec with non-functional requirements, architecture plan, dependency-aware tasks.
 
@@ -47,7 +47,7 @@ Do **not** use this skill to write the plan (architecture, modules) — that is
    - **Non-functional requirements** (only for `scale: enterprise` or when explicitly relevant): performance, security, scalability, observability.
    - **Open questions**: unresolved items that `ls-sdd-clarify` will tackle.
 
-4. **Read the template** at `~/.agents/skills/ls-sdd/templates/spec.template.md` (or the equivalent path in the installed skill). Substitute the `{{placeholders}}`:
+4. **Read the template** at `ls-sdd/templates/spec.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute the `{{placeholders}}`:
    - `{{NNNN}}` → the spec ID
    - `{{identity}}` → the slug
    - `{{YYYY-MM-DDTHH:MM}}` → current timestamp
@@ -68,16 +68,13 @@ Do **not** use this skill to write the plan (architecture, modules) — that is
 
 8. **Confirm to the user**: print the spec path, ID, and slug, and recommend
    the next step:
-   - For `trivial` scale: recommend `ls-sdd-tasklist` directly (skip plan).
+   - For `trivial` scale: recommend `ls-sdd-create-plan` (the agent will produce a minimal single-paragraph plan) then `ls-sdd-tasklist`.
    - For `standard` / `enterprise`: recommend `ls-sdd-clarify` to surface gaps before planning.
 
 ## Language
 
-Write the spec in the **project's artifact language** — read it from the
-`Artifact Language` section of `AGENTS.md`. If `AGENTS.md` is silent and no
-existing artifacts exist, ask the user once and recommend running
-`ls-sdd-init` to record the choice. The conversation language does not
-determine the artifact language.
+→ See `ls-sdd` § Language. Write the spec in the project's artifact language.  
+If `AGENTS.md` is absent and no artifacts exist, ask the user once and recommend `ls-sdd-init`.
 
 ## What Not to Do
 

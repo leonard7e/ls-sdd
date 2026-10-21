@@ -5,7 +5,7 @@ description: Generate an actionable, dependency-aware task list from an implemen
 
 # ls-sdd-tasklist — Generate Tasks from a Plan
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -46,7 +46,7 @@ Do **not** use this skill to design architecture — that is
 4. **Number tasks** `T0001`, `T0002`, ... in roughly the order they should be
    executed. Dependencies may force reordering at execution time; that is fine.
 
-5. **Read the template** at `~/.agents/skills/ls-sdd/templates/tasks.template.md`. Substitute:
+5. **Read the template** at `ls-sdd/templates/tasks.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute:
    - `{{NNNN}}` → the tasks file ID (use the plan ID for simplicity, or scan `tasks.md` files if you want a separate sequence — the convention is one `tasks.md` per plan, so the ID equals the plan ID)
    - `{{plan-id}}` → the plan ID
    - `{{YYYY-MM-DDTHH:MM}}` → current timestamp
@@ -67,44 +67,27 @@ Do **not** use this skill to design architecture — that is
    short summary of the dependency graph (e.g. "T0001 → T0002 → T0003;
    T0004 parallel to T0002"). Recommend the next step: `ls-sdd-analyze`.
 
-## Task Format (reminder)
+## Task Format
 
-```markdown
-- [ ] T0001 Provider-Trait definieren
-  - depends: -
-  - files: src/provider/mod.rs
-  - acceptance: Trait mit complete(), stream()
-
-- [P] T0002 OpenAI-Provider implementieren
-  - depends: T0001
-  - files: src/provider/openai.rs
-  - acceptance: OpenAI-Provider implementiert das Trait, Tests grün
-```
-
-- `- [ ]` open · `- [x]` done · `- [~]` blocked
-- `[P]` after the checkbox marks a parallelizable task.
-- `depends:` lists task IDs that must be done first, or `-` for none.
-- `files:` lists the files this task will create or modify.
-- `acceptance:` states the verifiable condition for "done".
+→ See `ls-sdd` § Task Format for the full specification. In brief:
+- `- [ ]` open · `- [x]` done · `- [~]` blocked · `- [P]` parallelizable
+- Each task has: `depends:` (IDs or `-`), `files:` (paths), `acceptance:` (verifiable criterion).
 
 ## Revision Flow
 
-If `tasks.md` already exists and the user wants to regenerate:
-- Read the old `tasks.md`.
+If `tasks.md` already exists and needs revision:
+- If revising after `ls-sdd-analyze` reported issues: read `plans/NNNN-<slug>/analysis.md` and address the specific findings (add tasks for requirement gaps, tighten vague acceptance criteria, fix broken dependencies or file conflicts).
 - Preserve the IDs of tasks that are already `- [x]` done — do not renumber them.
-- Append new tasks with the next free IDs.
+- Append new tasks with the next free IDs (`T####`).
 - If a done task is now obsolete, mark it `- [x]` with a note `obsolete: <reason>` rather than deleting it (preserves history).
 
 ## Language
 
-Write `tasks.md` in the **project's artifact language** — read it from the
-`Artifact Language` section of `AGENTS.md`. Match the language of the plan
-it derives from. The conversation language does not determine the artifact
-language.
+→ See `ls-sdd` § Language. Write all artifacts in the project's artifact language (from `AGENTS.md`).
 
 ## What Not to Do
 
 - Do not write tasks that lack an `acceptance:` criterion — unverifiable tasks cannot be marked done safely.
 - Do not create tasks without `files:` — `ls-sdd-implement` uses this to know where to work.
 - Do not invent dependencies; only set `depends:` when task B truly cannot start before task A.
-- Do not skip the `[P]` marker on parallelizable tasks — it lets future multi-agent execution parallelize safely.
+- Do not skip the `[P]` marker on parallelizable tasks — it enables future multi-agent parallel execution once their `depends:` are satisfied.

@@ -5,7 +5,7 @@ description: Structured clarification of an existing specification. Use before c
 
 # ls-sdd-clarify — Clarify a Specification
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -96,15 +96,12 @@ skill only adds a `clarifications.md` and updates the spec's status.
 
 7. **Confirm to the user**: print the clarifications path, the count of
    questions asked/answered, and recommend the next step:
-   - If `scale: trivial` and no major gaps: recommend `ls-sdd-tasklist` directly.
+   - If `scale: trivial` and no major gaps: recommend `ls-sdd-create-plan` (minimal plan) then `ls-sdd-tasklist` directly.
    - Otherwise: recommend `ls-sdd-create-plan`.
 
 ## Language
 
-Write `clarifications.md` in the **project's artifact language** — read it
-from the `Artifact Language` section of `AGENTS.md`. Match the language of
-the spec it clarifies. The conversation language does not determine the
-artifact language.
+→ See `ls-sdd` § Language. Write all artifacts in the project's artifact language (from `AGENTS.md`).
 
 ## What Not to Do
 

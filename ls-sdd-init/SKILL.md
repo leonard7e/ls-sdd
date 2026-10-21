@@ -5,7 +5,7 @@ description: Create or update the project constitution in AGENTS.md. Use at proj
 
 # ls-sdd-init — Project Constitution
 
-**Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -83,11 +83,7 @@ Do **not** use this skill to record feature work — that belongs in a spec.
 
 ## Language
 
-The constitution itself is written in the **project's artifact language**
-(the one declared in the `Artifact Language` section). If the user
-communicates in German but the project is English-language, the constitution
-is in English. The conversation language only affects how the agent talks to
-the user, not what it writes into files.
+→ See `ls-sdd` § Language. The constitution itself is written in the project's artifact language (as determined in step 2).
 
 ## What Not to Do
 

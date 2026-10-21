@@ -1,6 +1,7 @@
 ---
 name: ls-sdd
 description: Spec-Driven Development (SDD) workflow overview and conventions. Use when the user asks about SDD, wants to know the current status of specs/plans/tasks, asks "what's next?" in an SDD project, or needs the canonical conventions (directory structure, frontmatter, status, slug, ID format) for any ls-sdd-* skill.
+convention-version: 2
 ---
 
 # ls-sdd — Spec-Driven Development (Meta-Skill)
@@ -11,7 +12,9 @@ machines, the slug/ID conventions, and the "what's next?" logic.
 
 All other `ls-sdd-*` skills **must** reference this skill for format details
 instead of duplicating the conventions. If you are running another `ls-sdd-*`
-skill, read this file first for the conventions, then proceed.
+skill, read **§ Directory Layout through § Templates** for the conventions,
+then proceed. Skip **§ What's Next? Logic** — it is only needed when `ls-sdd`
+is invoked directly.
 
 ## Workflow
 
@@ -142,7 +145,7 @@ Checkbox list with metadata, parsable by the agent:
 ```
 
 - `- [ ]` open · `- [x]` done · `- [~]` blocked
-- `[P]` after the checkbox marks a task as **parallelizable** (can run alongside other `[P]` tasks once their `depends:` are satisfied).
+- `[P]` after the checkbox marks a task as **parallelizable** (safe to run alongside other `[P]` tasks once their `depends:` are satisfied). *(Multi-agent parallelism is a future capability; single-agent environments execute `[P]` tasks in order.)*
 - `depends:` lists task IDs that must be done first, or `-` for none.
 - `files:` lists the files this task will create or modify.
 - `acceptance:` states the verifiable condition for "done".
@@ -151,7 +154,7 @@ Checkbox list with metadata, parsable by the agent:
 
 `ls-sdd-specify` asks the user about the scale of the work:
 
-- **trivial** (bugfix, small tweak): minimal spec, skip plan, go straight to a task list.
+- **trivial** (bugfix, small tweak): minimal spec → minimal plan (`ls-sdd-create-plan` produces a single-paragraph plan) → tasks. The plan file is still created so that `ls-sdd-tasklist` can find it in `planned` status.
 - **standard** (feature, new module): full spec → plan → tasks.
 - **enterprise** (system, multiple teams): spec with non-functional requirements, architecture plan, tasks with dependencies.
 
@@ -184,24 +187,25 @@ what it writes into files.
 
 ## Templates
 
-Canonical templates live as files in this skill's directory. Reference them
-instead of inlining:
+Canonical templates live as files in this skill's `templates/` directory (referenced relative to the skills root, e.g. `ls-sdd/templates/`). Reference them instead of inlining:
 
 - [`templates/spec.template.md`](templates/spec.template.md)
 - [`templates/plan.template.md`](templates/plan.template.md)
 - [`templates/tasks.template.md`](templates/tasks.template.md)
+- [`templates/analysis.template.md`](templates/analysis.template.md)
+- [`templates/convergence.template.md`](templates/convergence.template.md)
 
 When creating an artifact, read the matching template, substitute the
 `{{placeholders}}`, and write the result to the target path.
 
-## "What's Next?" Logic
+## What's Next? Logic *(only relevant when invoked directly as `ls-sdd`; sub-skills may skip this section)*
 
 When the user asks "what's next?" or invokes `ls-sdd` without a specific
 request, scan the project and recommend the next step:
 
 1. **No `AGENTS.md`?** → recommend `ls-sdd-init`.
-2. **No `specs/` or specs all in `draft`?** → recommend `ls-sdd-specify` (or `ls-sdd-clarify` if a draft exists).
-3. **Specs in `clarified` but no plan referencing them?** → recommend `ls-sdd-create-plan`.
+2. **No `specs/` or specs all in `draft`?** → recommend `ls-sdd-specify` (or `ls-sdd-create-plan` if a draft spec has `scale: trivial`, or `ls-sdd-clarify` for standard/enterprise drafts).
+3. **Specs in `clarified` (or trivial in `draft`) but no plan referencing them?** → recommend `ls-sdd-create-plan`.
 4. **Plan in `planned` but no `tasks.md`?** → recommend `ls-sdd-tasklist`.
 5. **Plan in `tasked` but no `analysis.md`?** → recommend `ls-sdd-analyze`.
 6. **Plan in `analyzed`?** → recommend `ls-sdd-implement`.
