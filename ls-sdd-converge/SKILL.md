@@ -5,7 +5,7 @@ description: Compare the current codebase against specs/plans/tasks and append m
 
 # ls-sdd-converge — Codebase ↔ Specs Convergence
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -32,24 +32,21 @@ not use it to write the original plan — that is `ls-sdd-create-plan`.
 
 ### Mode A — Brownfield Adoption
 
-1. **Scan the codebase**: identify the main modules, their responsibilities,
-   and the user-facing capabilities. Read `AGENTS.md` if it exists; if not,
-   recommend `ls-sdd-init` first.
-
-   Ask the user which capabilities to cover before proceeding. Start with at most 3–5 modules or capabilities; do not attempt to reverse-engineer the entire codebase at once.
-2. **Reverse-engineer specs**: for each major capability, draft a spec
+1. Read `AGENTS.md` if it exists; if not, recommend `ls-sdd-init` first. Ask the user which capabilities to cover before proceeding. Start with at most 3–5 modules or capabilities; do not attempt to reverse-engineer the entire codebase at once.
+2. **Delegate bounded codebase research packages** for the selected capabilities. Each package should identify relevant modules, responsibilities, user-facing behavior, and code or test evidence. Keep requests read-only and as non-overlapping as practical. The main session consolidates the findings and drafts the artifacts; research subagents do not create or modify them.
+3. **Reverse-engineer specs**: for each major capability, draft a spec
    (`specs/NNNN-spec-<slug>/spec.md`) capturing *what* it does today (not
    what it should do). Set `status: planned` (skip `draft`/`clarified` —
    the code is the source of truth here).
-3. **Reverse-engineer a plan**: create `plans/NNNN-<slug>/plan.md`
+4. **Reverse-engineer a plan**: create `plans/NNNN-<slug>/plan.md`
    describing the current architecture as-is. Set `status: tasked`.
-4. **Generate tasks**: create `plans/NNNN-<slug>/tasks.md` with tasks for
+5. **Generate tasks**: create `plans/NNNN-<slug>/tasks.md` with tasks for
    the *gaps* — places where the code does not match the (reverse-engineered)
    spec, or where quality bar (tests, types) is not met. Mark all
    already-done work as `- [x]` with `acceptance: already in place`.
-5. **Write a convergence report** to `plans/NNNN-<slug>/convergence.md`
+6. **Write a convergence report** to `plans/NNNN-<slug>/convergence.md`
    (see format below).
-6. **Recommend** `ls-sdd-analyze` then `ls-sdd-implement`.
+7. **Recommend** `ls-sdd-analyze` then `ls-sdd-implement`.
 
 ### Mode B — Drift After Implementation
 
@@ -61,12 +58,13 @@ not use it to write the original plan — that is `ls-sdd-create-plan`.
 2. **Read the existing artifacts**: plan, tasks, referenced specs, and the
    constitution.
 
-3. **Scan the codebase** for the files referenced in `tasks.md` and the
-   plan's module list. Look for:
+3. **Compare code and tests using bounded research packages.** Delegate independent, non-overlapping checks of the files referenced in `tasks.md` and the plan's module list. Ask each subagent to return findings mapped as `requirement/task → code or test evidence → discrepancy/uncertainty`, with paths and relevant sections or lines. Keep the scope to:
    - **Missing work**: spec requirements that have no corresponding code.
    - **Drifted work**: code that exists but does not match the spec (different behavior, missing edge-case handling, relaxed validation).
-   - **Extra work**: code that exists but is not in any spec — either scope creep or undocumented features. For undocumented features, propose a new spec via `ls-sdd-specify` rather than silently accepting.
+   - **Extra work**: code that exists but is not in any spec — either scope creep or undocumented features.
    - **Broken acceptance criteria**: tasks marked `- [x]` whose acceptance criterion no longer holds (e.g. a test that was deleted or now fails).
+
+   The main session consolidates overlapping findings and decides whether to append tasks or recommend `ls-sdd-specify` for undocumented behavior. Do not turn uncertain or undocumented behavior into implementation tasks without that assessment.
 
 4. **Append new tasks** to the existing `tasks.md`:
    - Use the next free task IDs (scan existing IDs, take `max + 1`).
@@ -101,7 +99,7 @@ not use it to write the original plan — that is `ls-sdd-create-plan`.
 
 ## What Not to Do
 
-- Do not silently accept undocumented features as "in scope" — propose a new spec instead.
+- Do not silently accept undocumented features as "in scope" — surface the evidence and let the main session recommend a new spec instead.
 - Do not delete or renumber existing tasks — append only.
 - Do not mark drifted tasks `- [~]` automatically; surface them and let the user decide.
 - Do not skip the convergence report — it is the audit trail of what was found and what was added.

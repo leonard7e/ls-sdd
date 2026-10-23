@@ -8,13 +8,16 @@ convention-version: 2
 
 This is the **single source of truth** for the `ls-sdd-*` skill family. It
 defines the workflow, the directory layout, the frontmatter models, the status
-machines, the slug/ID conventions, and the "what's next?" logic.
+machines, the slug/ID conventions, the research/delegation contract, and the
+"what's next?" logic.
 
 All other `ls-sdd-*` skills **must** reference this skill for format details
 instead of duplicating the conventions. If you are running another `ls-sdd-*`
-skill, read **§ Directory Layout through § Templates** for the conventions,
-then proceed. Skip **§ What's Next? Logic** — it is only needed when `ls-sdd`
-is invoked directly.
+skill, read **§ Directory Layout through § Templates** for the conventions and
+**§ Research and Delegation** for the shared research contract, then proceed.
+The research section applies regardless of the prescribed conventions-reading
+range. Skip **§ What's Next? Logic** — it is only needed when `ls-sdd` is
+invoked directly.
 
 ## Workflow
 
@@ -145,7 +148,7 @@ Checkbox list with metadata, parsable by the agent:
 ```
 
 - `- [ ]` open · `- [x]` done · `- [~]` blocked
-- `[P]` after the checkbox marks a task as **parallelizable** (safe to run alongside other `[P]` tasks once their `depends:` are satisfied). *(Multi-agent parallelism is a future capability; single-agent environments execute `[P]` tasks in order.)*
+- `[P]` after the checkbox marks a task as **parallelizable** (safe to run alongside other `[P]` tasks once their `depends:` are satisfied). This describes task execution only; single-agent environments execute `[P]` tasks in order. Research subagents may be used independently of this rule and do not imply parallel implementation.
 - `depends:` lists task IDs that must be done first, or `-` for none.
 - `files:` lists the files this task will create or modify.
 - `acceptance:` states the verifiable condition for "done".
@@ -198,10 +201,80 @@ Canonical templates live as files in this skill's `templates/` directory (refere
 When creating an artifact, read the matching template, substitute the
 `{{placeholders}}`, and write the result to the target path.
 
+## Research and Delegation
+
+Exploratory codebase searches and external documentation research should be
+delegated to research subagents when a concrete question requires them. This is
+not an extra SDD phase or a requirement to research in every phase. The main
+session remains responsible for communicating with the user, defining scope
+and open decisions, assessing evidence, resolving contradictions, synthesizing
+findings, and producing the SDD result.
+
+### Responsibility boundary
+
+| Main session | Research subagent |
+|---|---|
+| Define the goal, scope, and decision the research supports | Find relevant files, symbols, and sources within the assigned scope |
+| Ask the user for product, priority, and other decisions | Inspect existing behavior and technical facts without changing them |
+| Evaluate evidence and resolve conflicts | Check official, version-appropriate documentation when external facts are needed |
+| Write and own the SDD artifact | Return concise findings, evidence, and uncertainty |
+
+Normal required reading is not exploration: the main session may read the
+applicable project instructions, a named SDD artifact, or a known code section
+needed for the current step. Delegate open-ended search chains and exploratory
+follow-up reading. Observed behavior and documentation describe facts; they do
+not automatically become product requirements, project policy, or user intent.
+
+### Research request and return
+
+Every research request must state:
+
+- the concrete question and the decision it will support;
+- a bounded search area, including relevant technologies and versions;
+- facts and evidence already known, to avoid duplicate work;
+- a read-only constraint: no file, status, or other state changes;
+- a stopping condition and the compact return format below.
+
+Return findings in this form:
+
+```text
+Finding
+Evidence: project path + section/lines, or URL + version context
+Relevance to the specific question
+Uncertainties and areas not investigated
+```
+
+A few hundred words is a guide, not a hard limit. Do not return entire files,
+raw logs, or transcripts by default; preserve decisive details and uncertainty
+even when that requires a longer report.
+
+### Efficiency, limits, and unavailable support
+
+- Delegate independent questions in parallel; avoid overlapping requests.
+- Continue follow-up questions in the same subagent session where practical.
+- Reuse relevant, evidenced findings rather than repeating research in every phase.
+- Do not turn raw research or subagent transcripts into artifacts automatically. Summarize decision-relevant findings in existing artifact sections when useful; no new research file is required.
+- Do not browse the web without a concrete information gap. Prefer official,
+  version-appropriate sources when external research is warranted.
+- Do not turn existing behavior or documentation statements into requirements
+  or project rules without confirmation.
+- If subagents are unavailable, say so. Do not silently switch to exploratory
+  direct research: ask whether the user authorizes a bounded direct-research
+  fallback or wants the affected step deferred. If authorized, retain the same
+  question, search limits, read-only constraint, and stopping condition; leave
+  unverified facts explicitly uncertain. Normal required reading remains allowed.
+
+Research delegation is independent of the `[P]` task-execution rule. It does not
+authorize parallel implementation or change the meaning of `[P]`.
+
 ## What's Next? Logic *(only relevant when invoked directly as `ls-sdd`; sub-skills may skip this section)*
 
 When the user asks "what's next?" or invokes `ls-sdd` without a specific
-request, scan the project and recommend the next step:
+request, determine the project status and recommend the next step. Small,
+unambiguous status lookups in known SDD files may be done directly. For a broad
+or exploratory status inventory across many artifacts or project areas, use the
+research contract above and delegate bounded, read-only discovery; the main
+session consolidates the findings and makes the recommendation.
 
 1. **No `AGENTS.md`?** → recommend `ls-sdd-init`.
 2. **No `specs/` or specs all in `draft`?** → recommend `ls-sdd-specify` (or `ls-sdd-create-plan` if a draft spec has `scale: trivial`, or `ls-sdd-clarify` for standard/enterprise drafts).
@@ -227,8 +300,10 @@ Then state the recommended next skill and why.
 
 ## Cross-Skill References
 
-Every `ls-sdd-*` skill begins its body with a pointer back to this file:
+Every `ls-sdd-*` skill begins its body with pointers back to this file:
 
 > **Conventions**: Read the `ls-sdd` meta-skill for directory structure, frontmatter, status, slug, and ID format. This skill does not duplicate them.
+>
+> **Research and delegation**: Also read § Research and Delegation in the `ls-sdd` meta-skill. It applies to every sub-skill regardless of the conventions-reading range below.
 
-This prevents convention drift. If a convention changes, update it here only.
+This prevents convention and delegation-policy drift. Update shared rules here only.

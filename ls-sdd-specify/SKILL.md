@@ -5,7 +5,7 @@ description: Create a functional specification describing what to build and why,
 
 # ls-sdd-specify — Create a Specification
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -37,7 +37,9 @@ Do **not** use this skill to write the plan (architecture, modules) — that is
    - Slug: lowercase kebab-case derived from the feature name (e.g. `auth-login`, `pdf-export`). Confirm with the user if unclear.
    - Directory: `specs/NNNN-spec-<slug>/`.
 
-3. **Interview the user** about the spec content. Ask in one structured block, not a long interrogation:
+3. **Check for research needs before and during requirement elicitation.** If understanding existing behavior is necessary, delegate a bounded inspection of the relevant user flows, features, interfaces, and tests. If an external capability or limitation affects a requirement, delegate a check of official, version-appropriate documentation for that specific question. Treat findings as factual context, not as requirements or user intent; ask the user to confirm product behavior, priorities, and scope.
+
+   **Interview the user** about the spec content. Ask in one structured block, not a long interrogation:
    - **Context**: current situation, why this matters now.
    - **Problem**: what problem is being solved, cost of not solving it.
    - **Requirements**: numbered, testable statements of behavior.
@@ -80,5 +82,5 @@ If `AGENTS.md` is absent and no artifacts exist, ask the user once and recommend
 
 - Do not include architecture, module breakdown, or file paths in the spec — that belongs in the plan.
 - Do not skip the `scale` question; it shapes downstream skills.
-- Do not invent requirements the user did not confirm. Mark inferred items as open questions instead.
+- Do not invent requirements the user did not confirm. Repository behavior and documentation are evidence about the current state, not automatically desired behavior; mark inferred items as open questions instead.
 - Do not duplicate the constitution (`AGENTS.md`). The spec assumes it as context.

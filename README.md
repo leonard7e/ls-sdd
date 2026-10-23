@@ -67,6 +67,12 @@ All directory structure, frontmatter, status, slug, and ID conventions are defin
 - Skill bodies (`SKILL.md`): **English** (standard in the skills ecosystem, better discoverability).
 - Generated artifacts (specs, plans, tasks, clarifications, analysis, convergence reports): the **project's artifact language**, declared in `AGENTS.md` by `ls-sdd-init`. This is a project property, independent of the conversation language — a German-speaking user may run an English-language project.
 
+## Research Delegation
+
+Exploratory codebase searches and concrete external-documentation questions may be delegated to read-only research subagents. This is information gathering only: the main session retains user communication, decisions, evidence assessment, synthesis, and responsibility for SDD artifacts. Normal required reading and known, task-relevant code sections may remain in the main session. Research delegation is not a new workflow phase and does not enable automatic parallel implementation; it is independent of the `[P]` task marker.
+
+This requires an agent session with subagent support. If that support is unavailable, the skill must say so and ask whether the user authorizes a bounded direct-research fallback or prefers to defer the affected step. It must not silently perform exploratory direct research. No new research artifact is required; raw research and subagent transcripts are not recorded automatically. No cost or token savings are assumed; those require measurement.
+
 ## Scope
 
 Global under `~/.agents/skills/`. SDD is project-independent.
@@ -76,5 +82,5 @@ Global under `~/.agents/skills/`. SDD is project-independent.
 - No CLI – skills are pure Markdown instructions for Zed (and compatible agents).
 - No own skill registry – use `npx skills` / skills.sh.
 - No automation beyond Zed (no GitHub Actions, no CI).
-- No multi-agent orchestration (BMAD "party mode" etc.).
+- No automatic multi-agent implementation orchestration (such as BMAD "party mode"). Delegated read-only information gathering is supported as described above.
 - No UI for the workflow – the agent guides the user.

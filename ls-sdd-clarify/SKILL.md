@@ -5,7 +5,7 @@ description: Structured clarification of an existing specification. Use before c
 
 # ls-sdd-clarify — Clarify a Specification
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -36,9 +36,12 @@ skill only adds a `clarifications.md` and updates the spec's status.
 3. **Read the constitution** (`AGENTS.md`) if it exists, for context on
    quality bar and architecture guardrails.
 
-4. **Ask structured questions** in these categories. Ask one block; let the
+4. **Separate factual gaps from user decisions.** Classify unresolved points as either (a) facts that can be checked in the codebase or official, version-appropriate documentation, or (b) product, priority, or policy decisions that only the user can make. Delegate only the relevant factual checks, with a bounded read-only scope and evidence. Use findings to resolve factual uncertainty or to present a new contradiction; do not replace missing evidence with a guess. Ask the user about decisions and any remaining ambiguity.
+
+   **Ask structured questions** in these categories. Ask one block; let the
    user answer in bulk. Skip categories that the spec already covers
-   thoroughly.
+   thoroughly, and do not ask the user to answer factual questions that the
+   delegated research has already resolved.
 
    - **Edge cases**: What happens at the boundaries? Empty input, zero, max
      length, concurrent access, offline, expired tokens, partial failure.
@@ -106,5 +109,5 @@ skill only adds a `clarifications.md` and updates the spec's status.
 ## What Not to Do
 
 - Do not rewrite the spec body. Clarifications are additive.
-- Do not skip categories silently — if a category produced no questions, note "no new questions" rather than omitting without trace.
+- Do not skip categories silently — if a category produced no questions, note "no new questions" rather than omitting without trace. Keep unresolved factual uncertainty explicit and cite evidence when reporting a contradiction.
 - Do not advance the spec to `clarified` if the user could not answer critical questions; leave it in `draft` and list the open items.

@@ -5,7 +5,7 @@ description: Generate an actionable, dependency-aware task list from an implemen
 
 # ls-sdd-tasklist — Generate Tasks from a Plan
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -35,7 +35,9 @@ Do **not** use this skill to design architecture — that is
    (`AGENTS.md`) for test-strategy and quality-bar expectations — every task
    should produce tests where the constitution requires them.
 
-3. **Decompose into tasks.** Walk the plan's modules and components and
+3. **Check only the uncertain implementation assumptions.** If concrete tasks depend on unverified target paths, test conventions, integration points, or technical ordering, delegate bounded checks of those facts. Distinguish files verified to exist from new paths planned by the plan; planned paths are valid task targets but must not be described as existing. Do not request another overall codebase analysis.
+
+4. **Decompose into tasks.** Walk the plan's modules and components and
    break them into tasks following these rules:
    - **Small**: each task is one coherent unit of work, doable in one sitting.
    - **Verifiable**: each task has an `acceptance:` criterion that can be checked (test passes, file exists, type checks, command succeeds).
@@ -43,27 +45,27 @@ Do **not** use this skill to design architecture — that is
    - **Dependency-ordered**: if task B needs task A's output, set `depends: T000A` on B.
    - **Parallelizable**: if a task can run alongside others once its `depends:` are satisfied, mark it `[P]`.
 
-4. **Number tasks** `T0001`, `T0002`, ... in roughly the order they should be
+5. **Number tasks** `T0001`, `T0002`, ... in roughly the order they should be
    executed. Dependencies may force reordering at execution time; that is fine.
 
-5. **Read the template** at `ls-sdd/templates/tasks.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute:
+6. **Read the template** at `ls-sdd/templates/tasks.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute:
    - `{{NNNN}}` → the tasks file ID (use the plan ID for simplicity, or scan `tasks.md` files if you want a separate sequence — the convention is one `tasks.md` per plan, so the ID equals the plan ID)
    - `{{plan-id}}` → the plan ID
    - `{{YYYY-MM-DDTHH:MM}}` → current timestamp
    - `{{Plan Title}}` → the plan's title
 
-6. **Write the file** to `plans/NNNN-<slug>/tasks.md`. Create the directory if it does not exist (it should already exist from `ls-sdd-create-plan`).
+7. **Write the file** to `plans/NNNN-<slug>/tasks.md`. Create the directory if it does not exist (it should already exist from `ls-sdd-create-plan`).
 
-7. **Set frontmatter**:
+8. **Set frontmatter**:
    ```yaml
    id: <plan-id>      # one tasks.md per plan; ID mirrors the plan ID
    plan: <plan-id>
    status: draft
    ```
 
-8. **Update the plan frontmatter**: set `status: tasked`.
+9. **Update the plan frontmatter**: set `status: tasked`.
 
-9. **Confirm to the user**: print the tasks path, the task count, and a
+10. **Confirm to the user**: print the tasks path, the task count, and a
    short summary of the dependency graph (e.g. "T0001 → T0002 → T0003;
    T0004 parallel to T0002"). Recommend the next step: `ls-sdd-analyze`.
 

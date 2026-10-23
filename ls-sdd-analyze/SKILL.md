@@ -5,7 +5,7 @@ description: Cross-artifact consistency analysis between a spec, its plan, and t
 
 # ls-sdd-analyze — Consistency Analysis
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -35,7 +35,9 @@ not use it to regenerate tasks — that is `ls-sdd-tasklist`.
    - Each referenced spec: `specs/MMMM-spec-<slug>/spec.md` and `clarifications.md` if present.
    - The constitution: `AGENTS.md` (for quality bar and test-strategy expectations).
 
-3. **Run these checks.** For each, record pass/fail with evidence.
+3. **Verify only material codebase assumptions.** The core of this skill is consistency among the spec, plan, tasks, and constitution—not a full implementation or drift audit. If a decision-relevant claim depends on a current code fact (for example, whether a referenced path exists or an API boundary is real), delegate a targeted, read-only verification and cite its evidence. Leave unsupported claims explicitly unverified; do not expand this into a general codebase survey.
+
+4. **Run these checks.** For each, record pass/fail with evidence.
 
    - **C1 — Requirement coverage**: For every numbered requirement and
      acceptance criterion in each spec, find at least one task that
@@ -60,15 +62,15 @@ not use it to regenerate tasks — that is `ls-sdd-tasklist`.
      every task creating a module must include test files in `files:` and a
      test-passing `acceptance:`).
 
-4. **Write the analysis** to `plans/NNNN-<slug>/analysis.md`:
+5. **Write the analysis** to `plans/NNNN-<slug>/analysis.md`:
 
    Read the template at `ls-sdd/templates/analysis.template.md` (relative to the skills root, typically `~/.agents/skills/`). Substitute `{{placeholders}}` with the plan ID, spec IDs, task counts, and results. Fill each `## C#` section with the findings from the checks above.
 
-5. **Update the plan status**:
+6. **Update the plan status**:
    - If all checks pass: set `status: analyzed`.
    - If any check fails: set `status: tasked` (back) and list the issues. Do **not** advance to `analyzed`.
 
-6. **Confirm to the user**: print the analysis path, the result (PASS/FAIL),
+7. **Confirm to the user**: print the analysis path, the result (PASS/FAIL),
    and the issue count. If FAIL, recommend the next step:
    - Re-run `ls-sdd-tasklist` to fix task issues, or
    - Re-run `ls-sdd-clarify` if a spec gap was found, or

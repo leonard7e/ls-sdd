@@ -5,7 +5,7 @@ description: Execute tasks from a task list in dependency order. Use when the pl
 
 # ls-sdd-implement — Execute Tasks
 
-**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
+**Conventions**: Read `ls-sdd` (§ Directory Layout through § Templates) for directory structure, frontmatter, status, slug, and ID format. Also read § Research and Delegation; it applies regardless of that reading range. Skip § What's Next? — it is only for direct `ls-sdd` invocation.
 
 ## Purpose
 
@@ -33,13 +33,14 @@ Do **not** use this skill to add new tasks — that is `ls-sdd-tasklist` or
    - Always read: `plans/NNNN-<slug>/tasks.md` (progress state) and `plans/NNNN-<slug>/plan.md` (module design).
    - Read `AGENTS.md` for quality bar and test strategy (usually short).
    - Read referenced spec sections **on demand**: only the requirement(s) relevant to the current task. Do not load all specs upfront — look up the relevant section when a task references it.
-   - Read source files only when listed in the current task's `files:`.
+   - Read source files only when listed in the current task's `files:`. Known, needed sections may be read directly; delegate open-ended task-specific exploration instead of expanding the direct reading scope.
+   - Before a task, delegate only necessary read-only research into its affected files, immediately relevant interfaces, tests, or version-dependent APIs. Skip delegation when the needed facts are already established and no exploratory question remains. A research subagent must not modify files or task lists; report planning gaps to the main session for the user to resolve.
 
 3. **Set the plan status** to `implementing` if it is not already.
 
 4. **Pick the next task(s) to work on**:
    - A task is **ready** if it is `- [ ]` (open) and all tasks in its `depends:` are `- [x]` (done).
-   - Tasks marked `[P]` (parallelizable) are safe to run concurrently once their `depends:` are satisfied. Current single-agent environments: pick them in order. *(Multi-agent parallelism is a future capability.)*
+   - Tasks marked `[P]` (parallelizable) are safe to run concurrently once their `depends:` are satisfied. In single-agent environments, pick them in order. Research subagents may be used independently of this task-execution rule; they do not authorize parallel implementation.
    - If a task is `- [~]` (blocked), do not pick it — surface the blocker to the user.
 
 5. **For each picked task**:
